@@ -15,10 +15,10 @@ POST /service/getmyname
 header: prime=GET
 
 payload:
-``json
+```json
 {
     "your name": "miles"
 }
-``
+```
 
 then all GET calls to /service/getmyname will return the json above
