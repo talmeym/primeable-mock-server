@@ -10,12 +10,12 @@ To use:
  
 example:
 
-``
 POST /service/getmyname
 
 header: prime=GET
 
 payload:
+``json
 {
     "your name": "miles"
 }
