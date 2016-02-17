@@ -3,7 +3,7 @@ an example project that implements a primable mock server using [regurgitator](h
 
 to use:
 
-- git clone https://github.com/talmeym/pribably-mock-server.git
+- git clone https://github.com/talmeym/primably-mock-server.git
 - mvn clean install
 - start up a tomcat deploying target/primable-mock-server-0.0.1.war on context /
 - POST to any desired url with a prime header stating the desired http method and the desired payload
