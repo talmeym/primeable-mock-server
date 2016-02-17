@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rg:regurgitator-configuration xmlns:rg="http://core.regurgitator.emarte.com" xmlns:rge="http://extensions.regurgitator.emarte.com" xmlns:rgw="http://web.extensions.regurgitator.emarte.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+							   xsi:schemaLocation="http://core.regurgitator.emarte.com regurgitatorCore.xsd http://extensions.regurgitator.emarte.com regurgitatorExtensions.xsd http://web.extensions.regurgitator.emarte.com regurgitatorExtensionsWeb.xsd">
+	<rg:identify-session source="request-metadata:server-name"/>
+	<rg:decision>
+		<rg:steps>
+			<rg:sequence id="priming">
+				<rg:build-parameter name="key"><rge:freemarker-builder all-contexts="true">${request_headers.prime}:${request_metadata.request_uri}</rge:freemarker-builder></rg:build-parameter>
+				<rg:generate-parameter name="pid" generator="UUID"/>
+				<rg:create-parameter name="session:pids" type="LIST_OF_STRING" merge="CONCAT" source="pid"/>
+				<rg:create-parameter name="session:keys" type="LIST_OF_STRING" merge="CONCAT" source="key"/>
+				<rg:create-parameter name="session:responses" type="LIST_OF_STRING" merge="CONCAT" source="request-payload:text"/>
+				<rg:create-response source="pid"><rge:freemarker-processor>primed. pid = ${value}</rge:freemarker-processor></rg:create-response>
+			</rg:sequence>
+			<rg:sequence id="pid-lookup">
+				<rg:create-parameter name="pid-index" type="NUMBER" source="session:pids"><rg:index-of-processor source="request-headers:pid"/></rg:create-parameter>
+				<rg:decision>
+					<rg:steps>
+						<rg:create-response id="pid-found" source="session:responses"><rg:index-processor source="pid-index"/></rg:create-response>
+						<rgw:create-http-response id="pid-not-found" status-code="500" value="nothing primed for that pid"/>
+					</rg:steps>
+					<rg:rules default-step="pid-not-found">
+						<rg:rule step="pid-found"><rg:condition source="pid-index" equals="-1" expectation="false"/></rg:rule>
+					</rg:rules>
+				</rg:decision>
+			</rg:sequence>
+			<rg:sequence id="key-lookup">
+				<rg:build-parameter name="key"><rge:freemarker-builder all-contexts="true">${request_metadata.method}:${request_metadata.request_uri}</rge:freemarker-builder></rg:build-parameter>
+				<rg:create-parameter name="key-index" type="NUMBER" source="session:keys"><rg:index-of-processor source="key" last="true"/></rg:create-parameter>
+				<rg:decision>
+					<rg:steps>
+						<rg:create-response id="key-found" source="session:responses"><rg:index-processor source="key-index"/></rg:create-response>
+						<rgw:create-http-response id="key-not-found" status-code="500" value="nothing primed for that method/url"/>
+					</rg:steps>
+					<rg:rules default-step="key-not-found">
+						<rg:rule step="key-found"><rg:condition source="key-index" equals="-1" expectation="false"/></rg:rule>
+					</rg:rules>
+				</rg:decision>
+			</rg:sequence>
+			<rgw:create-http-response id="priming-error" status-code="500" value="priming error - use a POST with payload."/>
+			<rgw:create-http-response id="header-error" status-code="500" value="you cannot use both pid and prime headers"/>
+			<rgw:create-http-response id="nothing-primed" status-code="500" value="nothing primed for this scenario"/>
+		</rg:steps>
+		<rg:rules default-step="nothing-primed">
+			<rg:rule step="priming">
+				<rg:condition source="request-headers:prime" exists="true"/>
+				<rg:condition source="request-headers:pid" exists="false"/>
+				<rg:condition source="request-metadata:method" equals="POST"/>
+				<rg:condition source="request-payload:text" exists="true"/>
+			</rg:rule>
+			<rg:rule step="priming-error">
+				<rg:condition source="request-headers:prime" exists="true"/>
+				<rg:condition source="request-headers:pid" exists="false"/>
+				<rg:condition source="request-metadata:method" equals="POST" expectation="false"/>
+				<rg:condition source="request-payload:text" exists="true"/>
+			</rg:rule>
+			<rg:rule step="priming-error">
+				<rg:condition source="request-headers:prime" exists="true"/>
+				<rg:condition source="request-headers:pid" exists="false"/>
+				<rg:condition source="request-metadata:method" equals="POST"/>
+				<rg:condition source="request-payload:text" exists="false"/>
+			</rg:rule>
+			<rg:rule step="pid-lookup">
+				<rg:condition source="request-headers:prime" exists="false"/>
+				<rg:condition source="request-headers:pid" exists="true"/>
+				<rg:condition source="session:pids" exists="true"/>
+			</rg:rule>
+			<rg:rule step="key-lookup">
+				<rg:condition source="request-headers:prime" exists="false"/>
+				<rg:condition source="request-headers:pid" exists="false"/>
+				<rg:condition source="session:responses" exists="true"/>
+			</rg:rule>
+			<rg:rule step="header-error">
+				<rg:condition source="request-headers:prime" exists="true"/>
+				<rg:condition source="request-headers:pid" exists="true"/>
+			</rg:rule>
+		</rg:rules>
+	</rg:decision>
+</rg:regurgitator-configuration>
