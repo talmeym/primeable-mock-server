@@ -1,7 +1,7 @@
 # primable-mock-server
 an example project that implements a primable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all)
 
-To use:
+to use:
 
 - git clone https://github.com/talmeym/pribably-mock-server.git
 - mvn clean install
@@ -21,4 +21,10 @@ payload:
 }
 ```
 
+response: ``this is the response``
+
 then all GET calls to /service/getmyname will return the json above
+
+all primes are assigned a pid, a UUID that allows a particular prime to be recalled despite subsequent priming to overide a method / url combination
+
+
