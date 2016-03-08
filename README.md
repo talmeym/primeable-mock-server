@@ -10,9 +10,7 @@ usage:
  
 ## priming
 
-POST to the desired url with a prime header stating the desired http method and the desired payload.
- 
-example:
+POST to the desired url with a prime header stating the desired http method and the desired payload, eg:
 
 POST /service/getmyname
 
