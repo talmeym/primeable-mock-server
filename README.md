@@ -6,7 +6,7 @@ to use:
 
 - git clone https://github.com/talmeym/primably-mock-server.git
 - mvn clean install
-- start up a tomcat deploying target/primable-mock-server-0.0.1.war on context /
+- start up a tomcat deploying target/primable-mock-server-0.0.1.war on the root context (/)
  
 ## priming
 
