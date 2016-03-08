@@ -29,16 +29,14 @@ then all GET calls to /service/getmyname will return the json above.
 
 ## pid
 
-all primes are assigned a pid, returned from the prime call, which is a UUID that allows a particular prime to be recalled despite subsequent primings overiding a method / url combination.
+all primes are assigned a pid, returned from the prime call, which is a UUID that allows a particular prime to be recalled despite subsequent primings overiding a method / url combination, eg:
 
-example:
-
+```
 GET /service/getmyname
 
 header: pid=8a85b201-669b-4633-8539-336e99a9c9be
 
 response:
-```json
 {
     "your name": "miles"
 }
