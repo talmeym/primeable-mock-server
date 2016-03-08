@@ -2,7 +2,7 @@
 
 an example project that implements a primable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all)
 
-to use:
+usage:
 
 - git clone https://github.com/talmeym/primably-mock-server.git
 - mvn clean install
