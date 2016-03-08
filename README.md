@@ -10,7 +10,7 @@ usage:
  
 ## priming
 
-POST to the desired url with a prime header stating the desired http method and the desired payload
+POST to the desired url with a prime header stating the desired http method and the desired payload.
  
 example:
 
@@ -27,11 +27,11 @@ payload:
 
 response: ``primed. pid = 8a85b201-669b-4633-8539-336e99a9c9be``
 
-then all GET calls to /service/getmyname will return the json above
+then all GET calls to /service/getmyname will return the json above.
 
 ## pid
 
-all primes are assigned a pid, returned from the prime call, which is a UUID that allows a particular prime to be recalled despite subsequent primings overiding a method / url combination
+all primes are assigned a pid, returned from the prime call, which is a UUID that allows a particular prime to be recalled despite subsequent primings overiding a method / url combination.
 
 example:
 
