@@ -1,5 +1,5 @@
-primable-mock-server
-====================
+# primable-mock-server
+
 an example project that implements a primable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all)
 
 to use:
@@ -8,8 +8,7 @@ to use:
 - mvn clean install
 - start up a tomcat deploying target/primable-mock-server-0.0.1.war on context /
  
-priming
--------
+## priming
 
 POST to any desired url with a prime header stating the desired http method and the desired payload
  
@@ -30,8 +29,7 @@ response: ``primed. pid = 8a85b201-669b-4633-8539-336e99a9c9be``
 
 then all GET calls to /service/getmyname will return the json above
 
-pid
----
+## pid
 
 all primes are assigned a pid, returned from the prime call, which is a UUID that allows a particular prime to be recalled despite subsequent primings overiding a method / url combination
 
