@@ -1,6 +1,6 @@
 # primable-mock-server
 
-an example project that implements a primable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all)
+an example project that implements a primable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all#regurgitator)
 
 usage:
 
