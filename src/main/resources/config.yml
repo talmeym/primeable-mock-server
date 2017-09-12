@@ -1,0 +1,199 @@
+regurgitator-configuration:
+ steps:
+ - identify-session:
+    source: request-metadata:server-name
+ - decision:
+    steps:
+    - sequence:
+       id: priming
+       steps:
+       - build-parameter:
+          name: key
+          builder:
+           freemarker-builder:
+            all-contexts: true
+            value: "${request_headers.prime}:${request_metadata.request_uri}"
+       - generate-parameter:
+          name: pid
+          generator: UUID
+       - create-parameter:
+          name: session:pids
+          type: LIST_OF_STRING
+          merge: CONCAT
+          source: pid
+       - create-parameter:
+          name: session:keys
+          type: LIST_OF_STRING
+          merge: CONCAT
+          source: key
+       - create-parameter:
+          name: session:responses
+          type: LIST_OF_STRING
+          merge: CONCAT
+          source: request-payload:text
+       - create-response:
+          source: pid
+          processor:
+           freemarker-processor:
+            value: primed. pid = ${value}
+    - sequence:
+       id: pid-lookup
+       steps:
+       - create-parameter:
+          name: pid-index
+          type: NUMBER
+          source: session:pids
+          processor:
+           index-of-processor:
+            source: request-headers:pid
+       - decision:
+          id: find-pid
+          steps:
+          - create-response:
+             id: pid-found
+             source: session:responses
+             processor:
+              index-processor: 
+               source: pid-index
+          - create-http-response:
+             id: pid-not-found
+             status-code: 500
+             value: nothing primed for that pid
+          default-step: pid-not-found
+          rules:
+          - step: pid-found
+            conditions:
+            - source: pid-index
+              equals: -1
+              expectation: false
+    - sequence:
+       id: key-lookup
+       steps:
+       - build-parameter:
+          name: key
+          builder:
+           freemarker-builder:
+            all-contexts: true
+            value: "${request_metadata.method}:${request_metadata.request_uri}"
+       - create-parameter:
+          name: key-index
+          type: NUMBER
+          source: session:keys
+          processor:
+           index-of-processor:
+            source: key
+            last: true
+       - decision:
+          id: find-key
+          steps:
+          - create-response:
+             id: key-found
+             source: session:responses
+             processor: 
+              index-processor: 
+               source: key-index
+          - create-http-response:
+             id: key-not-found
+             status-code: 500
+             value: nothing primed for that method/url
+          default-step: key-not-found
+          rules:
+          - step: key-found
+            conditions:
+            - source: key-index
+              equals: -1
+              expectation: false
+    - create-http-response: 
+       id: priming-error
+       status-code: 500
+       value: priming error - use a POST with payload.
+    - create-http-response:
+       id: header-error
+       status-code: 500
+       value: you cannot use both pid and prime headers
+    - create-http-response:
+       id: nothing-primed
+       status-code: 500
+       value: nothing primed for this scenario
+    default-step: nothing-primed
+    rules:
+    - id: php 
+      step: priming
+      conditions:
+      - id: php-has-prime-header
+        source: request-headers:prime
+        exists: true
+      - id: php-no-pid-header
+        source: request-headers:pid
+        exists: false
+      - id: php-method-post
+        source: request-metadata:method
+        equals: POST
+        conditions:
+        - id: php-has-payload
+          source: request-payload:text
+          exists: true
+    - id: pe-not-post
+      step: priming-error
+      conditions:
+      - id: penp-prime-header
+        source: request-headers:prime
+        exists: true
+      - id: penp-no-pid-header
+        source: request-headers:pid
+        exists: false
+      - id: penp-method-not-post
+        source: request-metadata:method
+        equals: POST
+        expectation: false
+      - id: penp-has-payload
+        source: request-payload:text
+        exists: true
+    - id: pe-no-payload
+      step: priming-error
+      conditions:
+      - id: penpl-prime-header
+        source: request-headers:prime
+        exists: true
+      - id: penpl-no-pid-header
+        source: request-headers:pid
+        exists: false
+      - id: penpl-method-post
+        source: request-metadata:method
+        equals: POST
+      - id: penpl-no-payload
+        source: request-payload:text
+        exists: false
+    - id: pidhp
+      step: pid-lookup
+      conditions:
+      - id: pidhp-no-prime-header
+        source: request-headers:prime
+        exists: false
+      - id: pidhp-has-pid-header
+        source: request-headers:pid
+        exists: true
+      - id: pidhp-has-session-pids
+        source: session:pids
+        exists: true
+    - id: keyhp
+      step: key-lookup
+      conditions:
+      - id: keyhp-no-prime-header
+        source: request-headers:prime
+        exists: false
+      - id: keyhp-no-pid-header
+        source: request-headers:pid
+        exists: false
+      - id: keyhp-has-session-responses
+        source: session:responses
+        exists: true
+    - id: he-both-headers
+      step: header-error
+      conditions:
+      - id: he-has-prime-header
+        source: request-headers:prime
+        exists: true
+      - id: he-has-pid-header
+        source: request-headers:pid
+        exists: true

@@ -14,7 +14,7 @@
 			</rg:sequence>
 			<rg:sequence id="pid-lookup">
 				<rg:create-parameter name="pid-index" type="NUMBER" source="session:pids"><rg:index-of-processor source="request-headers:pid"/></rg:create-parameter>
-				<rg:decision>
+				<rg:decision id="find-pid">
 					<rg:steps>
 						<rg:create-response id="pid-found" source="session:responses"><rg:index-processor source="pid-index"/></rg:create-response>
 						<rgw:create-http-response id="pid-not-found" status-code="500" value="nothing primed for that pid"/>
@@ -27,7 +27,7 @@
 			<rg:sequence id="key-lookup">
 				<rg:build-parameter name="key"><rge:freemarker-builder all-contexts="true">${request_metadata.method}:${request_metadata.request_uri}</rge:freemarker-builder></rg:build-parameter>
 				<rg:create-parameter name="key-index" type="NUMBER" source="session:keys"><rg:index-of-processor source="key" last="true"/></rg:create-parameter>
-				<rg:decision>
+				<rg:decision id="find-key">
 					<rg:steps>
 						<rg:create-response id="key-found" source="session:responses"><rg:index-processor source="key-index"/></rg:create-response>
 						<rgw:create-http-response id="key-not-found" status-code="500" value="nothing primed for that method/url"/>
@@ -42,37 +42,37 @@
 			<rgw:create-http-response id="nothing-primed" status-code="500" value="nothing primed for this scenario"/>
 		</rg:steps>
 		<rg:rules default-step="nothing-primed">
-			<rg:rule step="priming">
-				<rg:condition source="request-headers:prime" exists="true"/>
-				<rg:condition source="request-headers:pid" exists="false"/>
-				<rg:condition source="request-metadata:method" equals="POST"/>
-				<rg:condition source="request-payload:text" exists="true"/>
+			<rg:rule step="priming" id="php">
+				<rg:condition id="php-has-prime-header" source="request-headers:prime" exists="true"/>
+				<rg:condition id="php-no-pid-header" source="request-headers:pid" exists="false"/>
+				<rg:condition id="php-method-post" source="request-metadata:method" equals="POST"/>
+				<rg:condition id="php-has-payload" source="request-payload:text" exists="true"/>
 			</rg:rule>
-			<rg:rule step="priming-error">
-				<rg:condition source="request-headers:prime" exists="true"/>
-				<rg:condition source="request-headers:pid" exists="false"/>
-				<rg:condition source="request-metadata:method" equals="POST" expectation="false"/>
-				<rg:condition source="request-payload:text" exists="true"/>
+			<rg:rule step="priming-error" id="pe-not-post">
+				<rg:condition id="penp-prime-header" source="request-headers:prime" exists="true"/>
+				<rg:condition id="penp-no-pid-header" source="request-headers:pid" exists="false"/>
+				<rg:condition id="penp-method-not-post" source="request-metadata:method" equals="POST" expectation="false"/>
+				<rg:condition id="penp-has-payload" source="request-payload:text" exists="true"/>
 			</rg:rule>
-			<rg:rule step="priming-error">
-				<rg:condition source="request-headers:prime" exists="true"/>
-				<rg:condition source="request-headers:pid" exists="false"/>
-				<rg:condition source="request-metadata:method" equals="POST"/>
-				<rg:condition source="request-payload:text" exists="false"/>
+			<rg:rule step="priming-error" id="pe-no-payload">
+				<rg:condition id="penpl-prime-header" source="request-headers:prime" exists="true"/>
+				<rg:condition id="penpl-no-pid-header" source="request-headers:pid" exists="false"/>
+				<rg:condition id="penpl-method-post" source="request-metadata:method" equals="POST"/>
+				<rg:condition id="penpl-no-payload" source="request-payload:text" exists="false"/>
 			</rg:rule>
-			<rg:rule step="pid-lookup">
-				<rg:condition source="request-headers:prime" exists="false"/>
-				<rg:condition source="request-headers:pid" exists="true"/>
-				<rg:condition source="session:pids" exists="true"/>
+			<rg:rule step="pid-lookup" id="pidhp">
+				<rg:condition id="pidhp-no-prime-header" source="request-headers:prime" exists="false"/>
+				<rg:condition id="pidhp-has-pid-header" source="request-headers:pid" exists="true"/>
+				<rg:condition id="pidhp-has-session-pids" source="session:pids" exists="true"/>
 			</rg:rule>
-			<rg:rule step="key-lookup">
-				<rg:condition source="request-headers:prime" exists="false"/>
-				<rg:condition source="request-headers:pid" exists="false"/>
-				<rg:condition source="session:responses" exists="true"/>
+			<rg:rule step="key-lookup" id="keyhp">
+				<rg:condition id="keyhp-no-prime-header" source="request-headers:prime" exists="false"/>
+				<rg:condition id="keyhp-no-pid-header" source="request-headers:pid" exists="false"/>
+				<rg:condition id="keyhp-has-session-responses" source="session:responses" exists="true"/>
 			</rg:rule>
-			<rg:rule step="header-error">
-				<rg:condition source="request-headers:prime" exists="true"/>
-				<rg:condition source="request-headers:pid" exists="true"/>
+			<rg:rule step="header-error" id="he-both-headers">
+				<rg:condition id="he-has-prime-header" source="request-headers:prime" exists="true"/>
+				<rg:condition id="he-has-pid-header" source="request-headers:pid" exists="true"/>
 			</rg:rule>
 		</rg:rules>
 	</rg:decision>
