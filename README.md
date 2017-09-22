@@ -42,6 +42,6 @@ response:
 }
 ```
 
-## config
+## configuration files
 
-configuration files : [xml](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.xml) [json](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.xml) [yml](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.yml) 
+[xml](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.xml) [json](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.json) [yml](https://github.com/talmeym/primeable-mock-server/blob/master/src/main/resources/config.yml) 
