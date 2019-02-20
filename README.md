@@ -4,7 +4,7 @@ an example project that implements a primable mock server using [regurgitator](h
 
 usage:
 
-- git clone https://github.com/talmeym/primably-mock-server.git
+- git clone https://github.com/talmeym/primeable-mock-server.git
 - mvn clean install
 - start up a tomcat instance, deploying target/primable-mock-server-0.0.1.war on the root context (/)
  
