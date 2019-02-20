@@ -6,7 +6,7 @@ usage:
 
 - git clone https://github.com/talmeym/primeable-mock-server.git
 - mvn clean install
-- start up a tomcat instance, deploying target/primable-mock-server-0.0.1.war on the root context (/)
+- start up a tomcat instance, deploying target/primeable-mock-server-0.0.1.war on the root context (/)
  
 ## priming
 
@@ -23,7 +23,7 @@ payload:
 }
 ```
 
-response: ``primed. pid = 8a85b201-669b-4633-8539-336e99a9c9be``
+response: ``primed. pid=8a85b201-669b-4633-8539-336e99a9c9be``
 
 then all GET calls to /service/getmyname will return the json above.
 
