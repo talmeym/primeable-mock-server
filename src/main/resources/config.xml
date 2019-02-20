@@ -6,11 +6,11 @@
 		<rg:steps>
 			<rg:sequence id="priming">
 				<rg:build-parameter name="key"><rge:freemarker-builder all-contexts="true">${request_headers.prime}:${request_metadata.request_uri}</rge:freemarker-builder></rg:build-parameter>
-				<rg:generate-parameter name="pid" generator="UUID"/>
+				<rg:generate-parameter name="pid" generator="uuid-generator"/>
 				<rg:create-parameter name="session:pids" type="LIST_OF_STRING" merge="CONCAT" source="pid"/>
 				<rg:create-parameter name="session:keys" type="LIST_OF_STRING" merge="CONCAT" source="key"/>
 				<rg:create-parameter name="session:responses" type="LIST_OF_STRING" merge="CONCAT" source="request-payload:text"/>
-				<rg:create-response source="pid"><rge:freemarker-processor>primed. pid = ${value}</rge:freemarker-processor></rg:create-response>
+				<rg:create-response source="pid"><rge:freemarker-processor>primed. pid=${value}</rge:freemarker-processor></rg:create-response>
 			</rg:sequence>
 			<rg:sequence id="pid-lookup">
 				<rg:create-parameter name="pid-index" type="NUMBER" source="session:pids"><rg:index-of-processor source="request-headers:pid"/></rg:create-parameter>
@@ -37,9 +37,9 @@
 					</rg:rules>
 				</rg:decision>
 			</rg:sequence>
-			<rgw:create-http-response id="priming-error" status-code="500" value="priming error - use a POST with payload."/>
+			<rgw:create-http-response id="priming-error" status-code="500" value="priming error - use POST with payload"/>
 			<rgw:create-http-response id="header-error" status-code="500" value="you cannot use both pid and prime headers"/>
-			<rgw:create-http-response id="nothing-primed" status-code="500" value="nothing primed for this scenario"/>
+			<rgw:create-http-response id="nothing-primed" status-code="500" value="nothing primed anywhere"/>
 		</rg:steps>
 		<rg:rules default-step="nothing-primed">
 			<rg:rule step="priming" id="php">

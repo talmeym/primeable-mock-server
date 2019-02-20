@@ -35,7 +35,7 @@ regurgitator-configuration:
           source: pid
           processor:
            freemarker-processor:
-            value: primed. pid = ${value}
+            value: primed. pid=${value}
     - sequence:
        id: pid-lookup
        steps:
@@ -106,7 +106,7 @@ regurgitator-configuration:
     - create-http-response: 
        id: priming-error
        status-code: 500
-       value: priming error - use a POST with payload.
+       value: priming error - use POST with payload
     - create-http-response:
        id: header-error
        status-code: 500
@@ -114,7 +114,7 @@ regurgitator-configuration:
     - create-http-response:
        id: nothing-primed
        status-code: 500
-       value: nothing primed for this scenario
+       value: nothing primed anywhere
     default-step: nothing-primed
     rules:
     - id: php 
