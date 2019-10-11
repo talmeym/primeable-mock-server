@@ -26,7 +26,7 @@
               "id": "find-pid",
               "kind": "decision",
               "steps": [
-                { "id": "pid-found", "kind": "create-response", "source": "session:responses", "processor": { "kind": "index-processor", "source": "pid-index" } },
+                { "id": "pid-found", "kind": "create-response", "source": "session:responses", "processor": { "kind": "at-index-processor", "source": "pid-index" } },
                 { "id": "pid-not-found", "kind": "create-http-response", "status-code": "500", "value": "nothing primed for that pid" }
               ],
               "default-step": "pid-not-found",
@@ -51,7 +51,7 @@
               "id": "find-key",
               "kind": "decision",
               "steps": [
-                { "id": "key-found", "kind": "create-response", "source": "session:responses", "processor": { "kind": "index-processor", "source": "key-index" } },
+                { "id": "key-found", "kind": "create-response", "source": "session:responses", "processor": { "kind": "at-index-processor", "source": "key-index" } },
                 { "id": "key-not-found", "kind": "create-http-response", "status-code": "500", "value": "nothing primed for that method/url" }
               ],
               "default-step": "key-not-found",

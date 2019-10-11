@@ -53,7 +53,7 @@ regurgitator-configuration:
              id: pid-found
              source: session:responses
              processor:
-              index-processor: 
+              at-index-processor:
                source: pid-index
           - create-http-response:
              id: pid-not-found
@@ -90,7 +90,7 @@ regurgitator-configuration:
              id: key-found
              source: session:responses
              processor: 
-              index-processor: 
+              at-index-processor:
                source: key-index
           - create-http-response:
              id: key-not-found

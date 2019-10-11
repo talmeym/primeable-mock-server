@@ -16,7 +16,7 @@
 				<rg:create-parameter name="pid-index" type="NUMBER" source="session:pids"><rg:index-of-processor source="request-headers:pid"/></rg:create-parameter>
 				<rg:decision id="find-pid">
 					<rg:steps>
-						<rg:create-response id="pid-found" source="session:responses"><rg:index-processor source="pid-index"/></rg:create-response>
+						<rg:create-response id="pid-found" source="session:responses"><rg:at-index-processor source="pid-index"/></rg:create-response>
 						<rgw:create-http-response id="pid-not-found" status-code="500" value="nothing primed for that pid"/>
 					</rg:steps>
 					<rg:rules default-step="pid-not-found">
@@ -29,7 +29,7 @@
 				<rg:create-parameter name="key-index" type="NUMBER" source="session:keys"><rg:index-of-processor source="key" last="true"/></rg:create-parameter>
 				<rg:decision id="find-key">
 					<rg:steps>
-						<rg:create-response id="key-found" source="session:responses"><rg:index-processor source="key-index"/></rg:create-response>
+						<rg:create-response id="key-found" source="session:responses"><rg:at-index-processor source="key-index"/></rg:create-response>
 						<rgw:create-http-response id="key-not-found" status-code="500" value="nothing primed for that method/url"/>
 					</rg:steps>
 					<rg:rules default-step="key-not-found">

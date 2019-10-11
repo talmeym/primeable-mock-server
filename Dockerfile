@@ -1,5 +1,9 @@
-FROM tomcat
+FROM azul/zulu-openjdk-alpine:11.0.4
 
-COPY target/primeable-mock-server-0.0.1.war /usr/local/tomcat/webapps/ROOT.war
+RUN apk --no-cache upgrade
 
-COPY target/primeable-mock-server-0.0.1 /usr/local/tomcat/webapps/ROOT
+COPY target/primable-mock-server-0.0.1.jar primable-mock-server.jar
+
+ENTRYPOINT java -cp primable-mock-server.jar com.emarte.regurgitator.extensions.jetty.RegurgitatorJettyServer 8090 "classpath:/config.xml" "/"
+
+EXPOSE 8090
