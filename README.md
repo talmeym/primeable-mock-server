@@ -2,11 +2,20 @@
 
 an example project that implements a primeable mock server using [regurgitator](http://github.com/talmeym/regurgitator-all#regurgitator)
 
-usage:
+## to use (as a war file):
 
 - git clone https://github.com/talmeym/primeable-mock-server.git
-- mvn clean install
-- start up a tomcat instance, deploying target/primeable-mock-server-0.0.1.war on the root context (/)
+- cd primeable-mock-server
+- mvn -f pom.war.xml clean install
+- start up a tomcat (on say 8080) deploying target/primeable-mock-server-0.0.1.war on the root context (/)
+
+## to use (in a container):
+
+- git clone https://github.com/talmeym/primeable-mock-server.git
+- cd primeable-mock-server
+- mvn -f pom.jetty.xml clean install
+- docker build . -t primeable-mock-server
+- docker run -p 8080:8080 primeable-mock-server
  
 ## priming
 
