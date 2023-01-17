@@ -37,9 +37,9 @@
 					</rg:rules>
 				</rg:decision>
 			</rg:sequence>
-			<rgw:create-http-response id="priming-error" status-code="500" value="priming error - use POST with payload"/>
-			<rgw:create-http-response id="header-error" status-code="500" value="you cannot use both pid and prime headers"/>
-			<rgw:create-http-response id="nothing-primed" status-code="500" value="nothing primed anywhere"/>
+			<rgw:create-http-response id="priming-error" status-code="400" value="priming error - use POST with payload"/>
+			<rgw:create-http-response id="header-error" status-code="400" value="you cannot use both pid and prime headers"/>
+			<rgw:create-http-response id="nothing-primed" status-code="400" value="nothing primed anywhere"/>
 		</rg:steps>
 		<rg:rules default-step="nothing-primed">
 			<rg:rule step="priming" id="php">

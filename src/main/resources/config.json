@@ -66,9 +66,9 @@
             }
           ]
         },
-        { "id": "priming-error", "kind": "create-http-response", "status-code": "500", "value": "priming error - use POST with payload" },
-        { "id": "header-error", "kind": "create-http-response", "status-code": "500", "value": "you cannot use both pid and prime headers" },
-        { "id": "nothing-primed", "kind": "create-http-response", "status-code": "500", "value": "nothing primed anywhere" }
+        { "id": "priming-error", "kind": "create-http-response", "status-code": "400", "value": "priming error - use POST with payload" },
+        { "id": "header-error", "kind": "create-http-response", "status-code": "400", "value": "you cannot use both pid and prime headers" },
+        { "id": "nothing-primed", "kind": "create-http-response", "status-code": "400", "value": "nothing primed anywhere" }
       ],
       "default-step": "nothing-primed",
       "rules": [

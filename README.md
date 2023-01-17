@@ -7,7 +7,7 @@ an example project that implements a primeable mock server using [regurgitator](
 - git clone https://github.com/talmeym/primeable-mock-server.git
 - cd primeable-mock-server
 - mvn -f pom.war.xml clean install
-- start up a tomcat (on say 8080) deploying target/primeable-mock-server-0.0.1.war on the root context (/)
+- start up a tomcat (on say 8090) deploying target/primeable-mock-server-0.0.1.war on the root context (/)
 
 ## to use (in a container):
 
@@ -15,7 +15,7 @@ an example project that implements a primeable mock server using [regurgitator](
 - cd primeable-mock-server
 - mvn -f pom.jetty.xml clean install
 - docker build . -t primeable-mock-server
-- docker run -p 8080:8080 primeable-mock-server
+- docker run -p 8090:8090 primeable-mock-server
  
 ## priming
 

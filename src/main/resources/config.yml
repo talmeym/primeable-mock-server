@@ -105,15 +105,15 @@ regurgitator-configuration:
               expectation: false
     - create-http-response: 
        id: priming-error
-       status-code: 500
+       status-code: 400
        value: priming error - use POST with payload
     - create-http-response:
        id: header-error
-       status-code: 500
+       status-code: 400
        value: you cannot use both pid and prime headers
     - create-http-response:
        id: nothing-primed
-       status-code: 500
+       status-code: 400
        value: nothing primed anywhere
     default-step: nothing-primed
     rules:

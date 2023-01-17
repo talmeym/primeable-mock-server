@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:11.0.4
+FROM azul/zulu-openjdk-alpine:19-latest
 
 RUN apk --no-cache upgrade
 
